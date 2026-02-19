@@ -1,0 +1,4 @@
+target/*.jar
+!target/bank-hellen-app.jar
+.git
+.idea

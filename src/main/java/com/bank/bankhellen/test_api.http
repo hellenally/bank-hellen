@@ -1,0 +1,18 @@
+### 1. Mendaftarkan Nasabah Baru (POST)
+POST http://localhost:8080/api/nasabah/daftar
+Content-Type: application/json
+
+{
+  "namaLengkap": "Hellen Allysa Putri",
+  "alamat": "Bandung",
+  "tempatLahir": "Bandung",
+  "tanggalLahir": "2000-01-01",
+  "nomorKtp": "1234567890",
+  "nomorHandphone": "0812345678"
+}
+
+### 2. Melihat Semua Nasabah (GET)
+GET http://localhost:8080/api/nasabah/semua
+
+### 3. Cari Nasabah Berdasarkan KTP (GET)
+GET http://localhost:8080/api/nasabah/cari/1234567890

@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  bank-app:
+    build: .
+    image: bank-hellen-app
+    ports:
+      - "8080:8080"
+    restart: always
