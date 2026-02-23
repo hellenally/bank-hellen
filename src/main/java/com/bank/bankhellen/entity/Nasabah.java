@@ -12,7 +12,8 @@ import java.time.LocalDate;
 @Builder
 public class Nasabah {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "nasabah_seq")
+    @SequenceGenerator(name = "nasabah_seq", sequenceName = "NASABAH_SEQ", allocationSize = 1)
     private Long id;
 
     private String namaLengkap;

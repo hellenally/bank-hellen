@@ -1,13 +1,17 @@
-FROM maven:3.8.4-openjdk-17 AS build
-WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline -B -Dmaven.wagon.http.retryHandler.count=3
-COPY src ./src
-RUN mvn clean package -DskipTests -B
+FROM jtl-tkgiharbor.hq.bni.co.id/wss-dev/ubi9/openjdk-21:1.22-1 AS build
+ENV HOME=/usr/app
+RUN mkdir -p $HOME
+WORKDIR $HOME
 
-FROM eclipse-temurin:17-jre-jammy
-WORKDIR /app
-COPY --from=build /app/target/bank-hellen-app.jar app.jar
-RUN mkdir -p data
+COPY . $HOME
+RUN mvn -Dhttps.proxyHost=192.168.98.199 -Dhttps.proxyPort=8080 -Dserver.address=0.0.0.0 -Dmaven.test.skip=true clean package
+
+FROM jtl-tkgiharbor.hq.bni.co.id/wss-dev/ubi9/openjdk-21-runtime
+WORKDIR /usr/app
+
+COPY --from=build /usr/app/target/*.jar /usr/app/*.jar
+#COPY --from=build /usr/app/src/main/resources/templates/wsdl/* /usr/app/src/main/resources/templates/wsdl/
+
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","/usr/app/*.jar"]

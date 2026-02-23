@@ -5,6 +5,7 @@ import com.bank.bankhellen.model.dto.*;
 import com.bank.bankhellen.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -27,10 +28,25 @@ public class NasabahController {
 
 
     @GetMapping("/semua")
-    public ResponseEntity<WebResponse<List<Nasabah>>> getAll() {
-        List<Nasabah> list = readService.findAll();
+    public ResponseEntity<WebResponse<List<Nasabah>>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Page<Nasabah> resultPage = readService.findAll(page, size);
+
         return ResponseEntity.ok(WebResponse.<List<Nasabah>>builder()
-                .responseCode(200).status("OK").message("Berhasil mengambil data").data(list).build());
+                .responseCode(200)
+                .status("OK")
+                .message("Berhasil mengambil data")
+                .data(resultPage.getContent())
+                        .paging(PagingResponse.builder()
+                                .currentPage(resultPage.getNumber())
+                                .totalPage(resultPage.getTotalPages())
+                                .size(resultPage.getSize())
+                                .totallElement(resultPage.getTotalElements())
+                                .numberOfElements(resultPage.getNumberOfElements())
+                                .build())
+                .build());
     }
 
     @GetMapping("/cari/{ktp}")
